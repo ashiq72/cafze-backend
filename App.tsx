@@ -82,7 +82,6 @@ const App: React.FC = () => {
           <>
             <Hero />
 
-            {/* Industry Sectors */}
             <section id="sectors" className="py-24 px-6 max-w-7xl mx-auto">
               <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
                 <div>
@@ -115,10 +114,8 @@ const App: React.FC = () => {
               </div>
             </section>
 
-            {/* AI Career Assistant */}
             <CareerAI />
 
-            {/* Testimonials */}
             <section className="py-24 bg-slate-100/50">
               <div className="max-w-7xl mx-auto px-6">
                 <div className="text-center mb-16">
@@ -142,7 +139,6 @@ const App: React.FC = () => {
               </div>
             </section>
 
-            {/* Application Form */}
             <BookingForm onApply={handleApply} />
           </>
         ) : (
