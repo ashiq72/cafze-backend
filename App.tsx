@@ -1,13 +1,13 @@
 
 import React, { useState } from 'react';
-import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import SectorCard from './components/SectorCard';
-import CareerAI from './components/AIPlanner';
-import BookingForm from './components/BookingForm';
-import Footer from './components/Footer';
-import ApplicationList from './components/ApplicationList';
-import { Sector, Testimonial, JobApplication } from './types';
+import Navbar from './components/Navbar.tsx';
+import Hero from './components/Hero.tsx';
+import SectorCard from './components/SectorCard.tsx';
+import CareerAI from './components/AIPlanner.tsx';
+import BookingForm from './components/BookingForm.tsx';
+import Footer from './components/Footer.tsx';
+import ApplicationList from './components/ApplicationList.tsx';
+import { Sector, Testimonial, JobApplication } from './types.ts';
 
 const SECTORS: Sector[] = [
   {
@@ -70,7 +70,7 @@ const App: React.FC = () => {
     : SECTORS.filter(s => s.category === activeCategory);
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-slate-50">
       <Navbar 
         applicationCount={applications.length} 
         onViewChange={setView} 
@@ -119,7 +119,7 @@ const App: React.FC = () => {
             <CareerAI />
 
             {/* Testimonials */}
-            <section className="py-24 bg-slate-50">
+            <section className="py-24 bg-slate-100/50">
               <div className="max-w-7xl mx-auto px-6">
                 <div className="text-center mb-16">
                   <h2 className="text-4xl font-bold mb-4">Success Stories</h2>

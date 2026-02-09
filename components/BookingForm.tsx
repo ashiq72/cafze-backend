@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { JobApplication } from '../types';
+import { JobApplication } from '../types.ts';
 
 interface Props {
   onApply: (app: Omit<JobApplication, 'id' | 'status' | 'date'>) => void;

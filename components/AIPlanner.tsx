@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
-import { generateWorkPermitRoadmap } from '../services/geminiService';
-import { CareerRoadmap } from '../types';
+import { generateWorkPermitRoadmap } from '../services/geminiService.ts';
+import { CareerRoadmap } from '../types.ts';
 
 const CareerAI: React.FC = () => {
   const [role, setRole] = useState('');

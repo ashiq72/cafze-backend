@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { JobApplication, ApplicationStatus } from '../types';
+import { JobApplication, ApplicationStatus } from '../types.ts';
 
 interface Props {
   applications: JobApplication[];
@@ -95,7 +95,6 @@ const ApplicationList: React.FC<Props> = ({ applications, onBack }) => {
                 </div>
               </div>
               
-              {/* Progress Bar Mock */}
               <div className="mt-8 pt-8 border-t border-slate-100">
                  <div className="flex justify-between text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">
                     <span>Submission</span>

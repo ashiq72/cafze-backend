@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Sector } from '../types';
+import { Sector } from '../types.ts';
 
 interface Props {
   sector: Sector;
