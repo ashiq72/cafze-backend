@@ -1,7 +1,0 @@
-{
-  "name": "GlobalForce AI Recruitment",
-  "description": "Premium international manpower agency specializing in work permits, global placements, and AI-powered career roadmaps.",
-  "requestFramePermissions": [
-    "geolocation"
-  ]
-}
