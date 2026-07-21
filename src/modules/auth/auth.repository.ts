@@ -13,13 +13,13 @@ export class AuthRepository {
       data: {
         email: input.email.toLowerCase(),
         passwordHash,
-        fullName: input.fullName,
+        name: input.name,
         phone: input.phone
       },
       select: {
         id: true,
         email: true,
-        fullName: true,
+        name: true,
         role: true,
         createdAt: true
       }

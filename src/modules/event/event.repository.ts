@@ -2,11 +2,12 @@ import { EventStatus, Prisma } from "@prisma/client";
 import { prisma } from "../../config/prisma";
 import { CreateEventInput, ListEventsInput, UpdateEventInput } from "./event.validation";
 
+// Define reusable include object to fetch related data with event
 const eventInclude = {
   organizer: {
     select: {
       id: true,
-      fullName: true,
+      name: true,
       email: true
     }
   },
@@ -24,6 +25,7 @@ const eventInclude = {
 } satisfies Prisma.EventInclude;
 
 export class EventRepository {
+  // Find a single event by its ID
   findById(id: string) {
     return prisma.event.findUnique({
       where: { id },
@@ -31,6 +33,7 @@ export class EventRepository {
     });
   }
 
+  // Find a single event by its slug (SEO-friendly identifier)
   findBySlug(slug: string) {
     return prisma.event.findUnique({
       where: { slug },
@@ -38,16 +41,24 @@ export class EventRepository {
     });
   }
 
+  // Get a paginated list of events with filtering
   async list(filters: ListEventsInput) {
+    // Build dynamic query conditions
     const where: Prisma.EventWhereInput = {
       status: filters.status,
+
+      // Filter events starting after a certain date
       startsAt: filters.startsAfter ? { gte: filters.startsAfter } : undefined,
+
+      // Search by title OR summary (case insensitive)
       OR: filters.search
         ? [
             { title: { contains: filters.search, mode: "insensitive" } },
             { summary: { contains: filters.search, mode: "insensitive" } }
           ]
         : undefined,
+
+      // Filter by category slug
       categories: filters.categorySlug
         ? {
             some: {
@@ -59,8 +70,12 @@ export class EventRepository {
         : undefined
     };
 
+    // Calculate pagination offset
     const skip = (filters.page - 1) * filters.limit;
 
+    // Run both queries in a transaction:
+    // 1. Get events
+    // 2. Count total events
     const [items, total] = await prisma.$transaction([
       prisma.event.findMany({
         where,
@@ -72,6 +87,7 @@ export class EventRepository {
       prisma.event.count({ where })
     ]);
 
+    // Return paginated response
     return {
       items,
       meta: {
@@ -83,6 +99,7 @@ export class EventRepository {
     };
   }
 
+  // Create a new event
   create(organizerId: string, slug: string, input: CreateEventInput) {
     return prisma.event.create({
       data: {
@@ -96,6 +113,8 @@ export class EventRepository {
         endsAt: input.endsAt,
         timezone: input.timezone,
         coverImageUrl: input.coverImageUrl,
+
+        // Create event-category relationships
         categories: {
           create: input.categoryIds.map((categoryId) => ({
             category: {
@@ -103,6 +122,8 @@ export class EventRepository {
             }
           }))
         },
+
+        // Create ticket types for the event
         ticketTypes: {
           create: input.ticketTypes.map((ticket) => ({
             name: ticket.name,
@@ -121,18 +142,24 @@ export class EventRepository {
     });
   }
 
+  // Update an existing event
   update(id: string, slug: string | undefined, input: UpdateEventInput) {
     const { categoryIds, ...eventData } = input;
 
     return prisma.$transaction(async (tx) => {
+      // If categories are provided, reset them
       if (categoryIds) {
+        // Remove old category relations
         await tx.eventCategory.deleteMany({ where: { eventId: id } });
+
+        // Insert new category relations
         await tx.eventCategory.createMany({
           data: categoryIds.map((categoryId) => ({ eventId: id, categoryId })),
           skipDuplicates: true
         });
       }
 
+      // Update main event data
       return tx.event.update({
         where: { id },
         data: {
@@ -144,6 +171,7 @@ export class EventRepository {
     });
   }
 
+  // Publish an event (make it visible/live)
   publish(id: string) {
     return prisma.event.update({
       where: { id },
@@ -155,6 +183,7 @@ export class EventRepository {
     });
   }
 
+  // Cancel an event
   cancel(id: string) {
     return prisma.event.update({
       where: { id },

@@ -10,9 +10,15 @@ export function validate(schema: AnyZodObject) {
         query: req.query
       });
 
+      // ✅ Safe assignments
       req.body = parsed.body ?? req.body;
       req.params = parsed.params ?? req.params;
-      req.query = parsed.query ?? req.query;
+
+      // ❗ FIX: do NOT overwrite query directly
+      if (parsed.query) {
+        Object.assign(req.query, parsed.query);
+      }
+
       next();
     } catch (error) {
       if (error instanceof ZodError) {

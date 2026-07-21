@@ -43,7 +43,7 @@ export class AuthService {
       user: {
         id: user.id,
         email: user.email,
-        fullName: user.fullName,
+        name: user.name,
         role: user.role
       },
       token: this.signToken(user.id, user.email, user.role)
