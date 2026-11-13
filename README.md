@@ -4,6 +4,25 @@ Node.js, Express, TypeScript, Prisma, and Supabase PostgreSQL backend for `cafze
 
 This backend is intentionally relational. It does not copy the previous MongoDB document shape from `base360`; orders, ticket items, ticket types, events, venues, categories, payments, and support tickets are modeled as separate normalized PostgreSQL tables.
 
+## Identity and tenant boundary
+
+This is a standalone application backend. Its users and events use PostgreSQL
+UUIDs, and authentication uses this service's own JWT secret and roles. The
+schema does not contain Base360 `tenantId`, public `tenantCode`, or verified
+domain mappings. Sending a Base360 tenant header does not partition its data,
+and a Base360 token is not a standalone organizer credential.
+
+Base360 owns the SaaS tenant/domain registry and the Cafze frontend's current
+identity/community integration. Adding shared identity or multi-tenant event
+ownership requires an explicit bridge, schema changes, and authorization rules;
+it cannot be achieved by deriving a tenant from a DNS label. No such conversion
+is applied by the tenant/domain integration in the other applications.
+
+For deployment, set this standalone service's `CORS_ORIGIN` to the actual
+frontend origin, such as `https://cafze.vercel.app`. Do not use `*` for a
+production allowlist. This service's CORS configuration is independent of
+Base360's verified domain registry and does not create tenant ownership.
+
 ## Folder Structure
 
 ```text
